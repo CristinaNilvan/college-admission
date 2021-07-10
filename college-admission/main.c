@@ -10,7 +10,8 @@ typedef struct
     float BiggestGrade;
     float BaccalaureateAverage;
     int Mode;
-} Student;
+    float CollegeAverage;
+} StudentCharacteristics;
 
 /*
  * FIRST_MODE = 0,8 * ExamGrade + 0,2 * BaccalaureateAverage;
@@ -50,7 +51,7 @@ int GetNumberOfStudents(FILE * File)
     return NumberOfStudents;
 }
 
-void GetPositionInStruct(Student * Students, int Index, int Position, char * Word)
+void GetPositionInStruct(StudentCharacteristics * Students, int Index, int Position, char * Word)
 {
     if (Position == 1)
         strcpy(Students[Index].Name, Word);
@@ -78,12 +79,13 @@ void GetPositionInStruct(Student * Students, int Index, int Position, char * Wor
     }
 }
 
-Student * GetStudents(FILE * File, int NumberOfStudents)
+StudentCharacteristics * GetStudents(FILE * File, int NumberOfStudents)
 {
     char Line[100];
     int Index = 0;
 
-    Student * EnrolledStudents = (Student *)malloc(NumberOfStudents * sizeof(Student));
+    StudentCharacteristics * EnrolledStudents =
+            (StudentCharacteristics *)malloc(NumberOfStudents * sizeof(StudentCharacteristics));
 
     for (int i = 0; i < NumberOfStudents; ++i)
     {
@@ -106,7 +108,42 @@ Student * GetStudents(FILE * File, int NumberOfStudents)
     return EnrolledStudents;
 }
 
-void ShowStudents(Student * Students, int NumberOfStudents)
+float CalculateAverageFirstMode(StudentCharacteristics Student)
+{
+    return 0.8 * Student.ExamGrade + 0.2 * Student.BaccalaureateAverage;
+}
+
+float CalculateAverageSecondMode(StudentCharacteristics Student)
+{
+    return 0.6 * Student.ExamGrade + 0.2 * Student.BiggestGrade + 0.2 * Student.BaccalaureateAverage;
+}
+
+StudentCharacteristics * ValidateStudents(StudentCharacteristics * EnrolledStudents, int NumberOfStudents,
+                                          int * NumberOfValidatedStudents)
+{
+    int Index = 0;
+    StudentCharacteristics * ValidatedStudents =
+            (StudentCharacteristics *)malloc(NumberOfStudents * sizeof(StudentCharacteristics));
+
+    for (int i = 0; i < NumberOfStudents; ++i)
+        if (EnrolledStudents[i].ExamGrade >= 5)
+        {
+            ValidatedStudents[Index] = EnrolledStudents[i];
+
+            if (ValidatedStudents[Index].Mode == 1)
+                ValidatedStudents[Index].CollegeAverage = CalculateAverageFirstMode(ValidatedStudents[Index]);
+            else
+                ValidatedStudents[Index].CollegeAverage = CalculateAverageSecondMode(ValidatedStudents[Index]);
+
+            Index += 1;
+        }
+
+    *NumberOfValidatedStudents = Index;
+
+    return ValidatedStudents;
+}
+
+void ShowEnrolledStudents(StudentCharacteristics * Students, int NumberOfStudents)
 {
     for (int i = 0; i < NumberOfStudents; ++i)
     {
@@ -120,6 +157,25 @@ void ShowStudents(Student * Students, int NumberOfStudents)
             printf("Mode: 1\n");
         else
             printf("Mode: 2\n");
+    }
+}
+
+void ShowValidatedStudents(StudentCharacteristics * Students, int NumberOfStudents)
+{
+    for (int i = 0; i < NumberOfStudents; ++i)
+    {
+        printf("Name: %s||", Students[i].Name);
+        printf("Exam grade: %0.2f||", Students[i].ExamGrade);
+        printf("Math grade: %0.2f||", Students[i].MathGrade);
+        printf("Biggest grade: %0.2f||", Students[i].BiggestGrade);
+        printf("Baccalaureate Average: %0.2f||", Students[i].BaccalaureateAverage);
+
+        if (Students[i].Mode == FIRST_MODE)
+            printf("Mode: 1||");
+        else
+            printf("Mode: 2||");
+
+        printf("College Average: %0.2f\n", Students[i].CollegeAverage);
     }
 }
 
