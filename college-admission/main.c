@@ -161,11 +161,11 @@ void SortStudents(StudentCharacteristics * Students, int NumberOfStudents)
             if (Students[i].CollegeAverage < Students[j].CollegeAverage)
                 SwapStudents(&Students[i], &Students[j]);
             else
-            if (Students[i].CollegeAverage == Students[j].CollegeAverage)
-            {
-                if (Students[i].MathGrade < Students[j].MathGrade)
-                    SwapStudents(&Students[i], &Students[j]);
-            }
+                if (Students[i].CollegeAverage == Students[j].CollegeAverage)
+                {
+                    if (Students[i].MathGrade < Students[j].MathGrade)
+                        SwapStudents(&Students[i], &Students[j]);
+                }
 }
 
 void WriteAdmittedStudentsInFile(FILE * File, StudentCharacteristics * Students, int NumberOfStudents)
