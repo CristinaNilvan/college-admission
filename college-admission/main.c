@@ -177,7 +177,7 @@ void WriteAdmittedStudentsInFile(FILE * File, StudentCharacteristics * Students,
     }
 }
 
-void GetAdmittedStudents(StudentCharacteristics * ValidatedStudents, int NumberOfValidatedStudents)
+void DetermineAdmittedStudents(StudentCharacteristics * ValidatedStudents, int NumberOfValidatedStudents)
 {
     FILE * AdmittedStudentsFile = ValidateFile("AdmittedStudents.txt", "w");
 
@@ -204,7 +204,7 @@ int main()
 
     SortStudents(ValidatedStudents, NumberOfValidatedStudents);
 
-    GetAdmittedStudents(ValidatedStudents, NumberOfValidatedStudents);
+    DetermineAdmittedStudents(ValidatedStudents, NumberOfValidatedStudents);
 
     free(EnrolledStudents);
     free(ValidatedStudents);
