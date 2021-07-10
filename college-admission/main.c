@@ -189,43 +189,25 @@ void GetAdmittedStudents(StudentCharacteristics * ValidatedStudents, int NumberO
     fclose(AdmittedStudentsFile);
 }
 
-void ShowEnrolledStudents(StudentCharacteristics * Students, int NumberOfStudents)
-{
-    for (int i = 0; i < NumberOfStudents; ++i)
-    {
-        printf("Name: %s||", Students[i].Name);
-        printf("Exam grade: %0.2f||", Students[i].ExamGrade);
-        printf("Math grade: %0.2f||", Students[i].MathGrade);
-        printf("Biggest grade: %0.2f||", Students[i].BiggestGrade);
-        printf("Baccalaureate Average: %0.2f||", Students[i].BaccalaureateAverage);
-
-        if (Students[i].Mode == FIRST_MODE)
-            printf("Mode: 1\n");
-        else
-            printf("Mode: 2\n");
-    }
-}
-
-void ShowValidatedStudents(StudentCharacteristics * Students, int NumberOfStudents)
-{
-    for (int i = 0; i < NumberOfStudents; ++i)
-    {
-        printf("Name: %s||", Students[i].Name);
-        printf("Exam grade: %0.2f||", Students[i].ExamGrade);
-        printf("Math grade: %0.2f||", Students[i].MathGrade);
-        printf("Biggest grade: %0.2f||", Students[i].BiggestGrade);
-        printf("Baccalaureate Average: %0.2f||", Students[i].BaccalaureateAverage);
-
-        if (Students[i].Mode == FIRST_MODE)
-            printf("Mode: 1||");
-        else
-            printf("Mode: 2||");
-
-        printf("College Average: %0.2f\n", Students[i].CollegeAverage);
-    }
-}
-
 int main()
 {
+    FILE * EnrolledStudentsFile = ValidateFile("EnrolledStudents.txt", "r");
+
+    int NumberOfStudents = GetNumberOfStudents(EnrolledStudentsFile);
+    fseek(EnrolledStudentsFile, 0, SEEK_SET);
+    StudentCharacteristics * EnrolledStudents = GetStudents(EnrolledStudentsFile, NumberOfStudents);
+
+    fclose(EnrolledStudentsFile);
+
+    int NumberOfValidatedStudents = 0;
+    StudentCharacteristics * ValidatedStudents = ValidateStudents(EnrolledStudents, NumberOfStudents, &NumberOfValidatedStudents);
+
+    SortStudents(ValidatedStudents, NumberOfValidatedStudents);
+
+    GetAdmittedStudents(ValidatedStudents, NumberOfValidatedStudents);
+
+    free(EnrolledStudents);
+    free(ValidatedStudents);
+
     return 0;
 }
