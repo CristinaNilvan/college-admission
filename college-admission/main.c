@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define AVAILABLE_POSITIONS 3
+
 typedef struct
 {
     char Name[80];
@@ -141,6 +143,50 @@ StudentCharacteristics * ValidateStudents(StudentCharacteristics * EnrolledStude
     *NumberOfValidatedStudents = Index;
 
     return ValidatedStudents;
+}
+
+void SwapStudents(StudentCharacteristics * FirstStudent, StudentCharacteristics * SecondStudent)
+{
+    StudentCharacteristics Auxiliary;
+
+    Auxiliary = *FirstStudent;
+    *FirstStudent = *SecondStudent;
+    *SecondStudent = Auxiliary;
+}
+
+void SortStudents(StudentCharacteristics * Students, int NumberOfStudents)
+{
+    for (int i = 0; i < NumberOfStudents - 1; ++i)
+        for (int j = i + 1; j < NumberOfStudents; ++j)
+            if (Students[i].CollegeAverage < Students[j].CollegeAverage)
+                SwapStudents(&Students[i], &Students[j]);
+            else
+            if (Students[i].CollegeAverage == Students[j].CollegeAverage)
+            {
+                if (Students[i].MathGrade < Students[j].MathGrade)
+                    SwapStudents(&Students[i], &Students[j]);
+            }
+}
+
+void WriteAdmittedStudentsInFile(FILE * File, StudentCharacteristics * Students, int NumberOfStudents)
+{
+    for (int i = 0; i < NumberOfStudents; ++i)
+    {
+        fprintf(File,"Name: %s || ", Students[i].Name);
+        fprintf(File,"College Average: %0.2f\n", Students[i].CollegeAverage);
+    }
+}
+
+void GetAdmittedStudents(StudentCharacteristics * ValidatedStudents, int NumberOfValidatedStudents)
+{
+    FILE * AdmittedStudentsFile = ValidateFile("AdmittedStudents.txt", "w");
+
+    if (AVAILABLE_POSITIONS >= NumberOfValidatedStudents)
+        WriteAdmittedStudentsInFile(AdmittedStudentsFile, ValidatedStudents, NumberOfValidatedStudents);
+    else
+        WriteAdmittedStudentsInFile(AdmittedStudentsFile, ValidatedStudents, AVAILABLE_POSITIONS);
+
+    fclose(AdmittedStudentsFile);
 }
 
 void ShowEnrolledStudents(StudentCharacteristics * Students, int NumberOfStudents)
