@@ -112,12 +112,12 @@ StudentCharacteristics * GetStudents(FILE * File, int NumberOfStudents)
 
 float CalculateAverageFirstMode(StudentCharacteristics Student)
 {
-    return 0.8 * Student.ExamGrade + 0.2 * Student.BaccalaureateAverage;
+    return (float)(0.8 * Student.ExamGrade + 0.2 * Student.BaccalaureateAverage);
 }
 
 float CalculateAverageSecondMode(StudentCharacteristics Student)
 {
-    return 0.6 * Student.ExamGrade + 0.2 * Student.BiggestGrade + 0.2 * Student.BaccalaureateAverage;
+    return (float)(0.6 * Student.ExamGrade + 0.2 * Student.BiggestGrade + 0.2 * Student.BaccalaureateAverage);
 }
 
 StudentCharacteristics * ValidateStudents(StudentCharacteristics * EnrolledStudents, int NumberOfStudents,
